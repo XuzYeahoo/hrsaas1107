@@ -17,7 +17,7 @@
       </el-card>
     </div>
     <!-- 放置新增弹层组件 -->
-    <AddDept :show-dialog="showDialog" />
+    <AddDept :show-dialog="showDialog" :tree-node="node" />
   </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       // 组织结构的内容在depts中，但是需要将其转化成树形结构
       // this.departs = result.depts 行不通，结构不同
       this.departs = tranListToTreeData(result.depts, '')
@@ -59,6 +59,7 @@ export default {
     addDepts(node) {
       // 显示弹层
       this.showDialog = true
+      this.node = node
     }
   }
 }
