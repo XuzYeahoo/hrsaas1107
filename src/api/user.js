@@ -1,24 +1,19 @@
 import request from '@/utils/request'
 
-export function login(data) {
-  return request({
-    url: '/vue-admin-template/user/login',
-    method: 'post',
-    data
-  })
+// 登录接口
+export const login = (data) => {
+  return request.post('/sys/login', data)
 }
 
-export function getInfo(token) {
-  return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
-  })
+// 获取用户资料
+export const getUserInfo = () => {
+  return request.post('/sys/profile')
 }
 
+// 根据Id获取用户的基本信息
+export const getUserDetailById = (id) => {
+  return request.get(`/sys/user/${id}`)
+}
 export function logout() {
-  return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
-  })
+
 }

@@ -35,8 +35,17 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: true
+    },
+    // 配置反向代理
+    proxy: {
+      // 当地址中有'/api'的时候会触发代理机制
+      '/api': {
+        target: 'http://ihrm-java.itheima.net/', // 要代理的服务器地址 这里不用写api
+        changeOrigin: true // 是否跨域
+        // 重写路径
+        // pathRewrite:{}
+      }
     }
-    // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
