@@ -55,16 +55,20 @@ export default {
     // 点击 新增 删除 编辑 时触发
     operateDepts(type) {
       if (type === 'add') {
-        // 添加子部门
+        // 添加子部门 在当前点击的部门下添加子部门
+        // 要传入当前点击的组件 告诉父组件在哪个部门下添加子部门
+        this.$emit('addDepts', this.treeNode)
       } else if (type === 'edit') {
         // 编辑部门
       } else {
         // 删除部门
         // 通过treeNode获取id
         this.$confirm('您确定要删除该组织部门吗？').then(() => {
+          // 点击确定就调用接口删除 因为是写在then里 所以采用原生Promise的方法继续.then
           return delDepartments(this.treeNode.id)
         }).then(() => {
           // 调用接口删除成功 此时后端数据变化但是前端没有变 需要子传父 通知父组件重新获取数据,重新渲染页面
+          // 因为现在所处的位置是封装的组件 所以要回到父组件重新渲染页面
           this.$emit('delDepts')
           this.$message.success('删除部门成功')
         })

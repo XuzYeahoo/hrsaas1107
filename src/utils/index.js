@@ -121,8 +121,10 @@ export function param2Obj(url) {
 export function tranListToTreeData(list, rootValue) {
   var arr = []
   list.forEach(item => {
+    // 先找根节点 此时rootValue=''
     if (item.pid === rootValue) {
-      // 找到之后 就要去找 item 下面有没有子节点
+      // 找到根节点之后 就要去找 item 下面有没有子节点
+      // 子节点的pid=父节点的id，此时rootValue=item.id 此时tranListToTreeData找的是子节点
       const children = tranListToTreeData(list, item.id)
       if (children.length) {
         // 如果children的长度大于0 说明找到了子节点

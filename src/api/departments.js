@@ -9,3 +9,8 @@ export const getDepartments = () => {
 export const delDepartments = (id) => {
   return requset.delete(`/company/department/${id}`)
 }
+
+// 新增部门
+export const addDepartments = (data) => {
+  return requset.post('/company/department', data)
+}
