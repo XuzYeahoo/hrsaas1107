@@ -1,8 +1,8 @@
 <template>
   <!-- 放置弹层组件 -->
-  <el-dialog title="新增部门" :visible="showDialog">
+  <el-dialog title="新增部门" :visible="showDialog" @close="btnCancel">
     <!-- 表单数据 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
         <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -21,15 +21,15 @@
     <!-- 确定和取消 -->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button size="small">确定</el-button>
-        <el-button size="small" type="primary">取消</el-button>
+        <el-button size="small" @click="btnCancel">取消</el-button>
+        <el-button size="small" type="primary" @click="btnOK">确定</el-button>
       </el-col>
     </el-row>
   </el-dialog>
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { addDepartments, getDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 export default {
   props: {
@@ -96,6 +96,26 @@ export default {
     async getEmployeeSimple() {
       // getEmployeeSimple()调用接口返回的是一个数组 里面是员工的id和username
       this.people = await getEmployeeSimple()
+    },
+    async btnOK() {
+      const valide = await this.$refs.deptForm.validate()
+      if (valide) {
+        // 表单校验通过 新增部门
+        // 因为表单不知道要在哪个部门后面新增部门 所以传入参数中要求添加pid属性
+        // 此时，将当前点击的部门的id赋值给要添加的部门的pid，就成为了子部门
+        await addDepartments({ ...this.formData, pid: this.treeNode.id })
+        // 子传父 告诉父组件重新获取数据 重新渲染页面
+        this.$emit('addDepts')
+        // 关闭弹窗 此时需要修改showDialog为false
+        this.$emit('update:showDialog', false)
+        // 关闭dialog的时候 会触发el-dialog的close事件 会重置表单 所以不需要再单独重置数据
+      }
+    },
+    btnCancel() {
+      // 关闭弹窗 此时需要修改showDialog为false
+      this.$emit('update:showDialog', false)
+      // 重置表单以及表单校验
+      this.$refs.deptForm.resetFields()
     }
   }
 }

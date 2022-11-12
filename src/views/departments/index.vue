@@ -17,7 +17,7 @@
       </el-card>
     </div>
     <!-- 放置新增弹层组件 -->
-    <AddDept :show-dialog="showDialog" :tree-node="node" />
+    <AddDept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
