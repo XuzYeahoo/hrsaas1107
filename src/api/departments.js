@@ -14,3 +14,13 @@ export const delDepartments = (id) => {
 export const addDepartments = (data) => {
   return requset.post('/company/department', data)
 }
+
+// 根据ID查询部门详情
+export const getDepartDetail = (id) => {
+  return requset.get(`/company/department/${id}`)
+}
+
+// 根据ID修改部门详情
+export const updateDepartments = (data) => {
+  return requset.put(`/company/department/${data.id}`, data) // 因为data中有id，所以直接合并，从data中获取id
+}

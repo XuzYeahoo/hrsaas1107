@@ -12,12 +12,12 @@
           <!-- 传入内容 => 插槽内容 会循环多次 有多少节点就循环多少次 -->
           <!-- 放置内容 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据 data是每个节点的数据对象 -->
-          <TreeTools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
+          <TreeTools slot-scope="{data}" :tree-node="data" @delDepts="getDepartments" @editDepts="editDepts" @addDepts="addDepts" />
         </el-tree>
       </el-card>
     </div>
     <!-- 放置新增弹层组件 -->
-    <AddDept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <AddDept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -60,6 +60,14 @@ export default {
       // 显示弹层
       this.showDialog = true
       this.node = node
+    },
+    editDepts(node) {
+      // 显示弹层
+      this.showDialog = true
+      this.node = node
+      // 在这里调用获取部门详情的方法
+      // 父组件 调用子组件的方法
+      this.$refs.addDept.getDepartDetail(node.id) // 直接调用子组件中的方法 传入一个id
     }
   }
 }
