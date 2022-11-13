@@ -21,10 +21,21 @@
             label="聘用形式"
             prop="formOfEmployment"
             sortable=""
+            :formatter="formatEmployment"
           />
           <el-table-column label="部门" prop="departmentName" sortable="" />
-          <el-table-column label="入职时间" prop="timeOfEntry" sortable="" />
-          <el-table-column label="账户状态" prop="enableState" sortable="" />
+          <!-- 作用域插槽+过滤器解决 -->
+          <el-table-column label="入职时间" prop="timeOfEntry" sortable="">
+            <template v-slot="{row}">
+              <!-- 将时间进行格式化 -->
+              {{ row.timeOfEntry | formatDate }}
+            </template>
+          </el-table-column>
+          <el-table-column label="账户状态" prop="enableState" sortable="">
+            <template v-slot="{row}">
+              <el-switch :value="row.enableState === 1" />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template>
               <el-button type="text" size="small">查看</el-button>
@@ -58,6 +69,7 @@
 
 <script>
 import { getEmployeeList } from '@/api/employees'
+import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 export default {
   data() {
     return {
@@ -84,6 +96,13 @@ export default {
     changePage(newPage) {
       this.page.page = newPage
       this.getEmployeeList()
+    },
+    // 格式化聘用形式
+    formatEmployment(row, column, cellValue, index) {
+      // 要找1对于的值
+      // cellValue是单元格的值 即聘用形式的值
+      const obj = EmployeeEnum.hireType.find(item => item.id === cellValue)
+      return obj ? obj.value : '未知'
     }
   }
 }

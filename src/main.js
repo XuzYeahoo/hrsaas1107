@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 
 import * as directives from '@/directives'
+import * as filters from '@/filters'
 import '@/icons' // icon
 import '@/permission' // permission control
 import Components from '@/components'
@@ -25,7 +26,9 @@ Object.keys(directives).forEach(key => {
   // 属性名带引号，所以得用[]
   Vue.directive(key, directives[key]) // 注册自定义指令
 })
-
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key]) // 注册过滤器
+})
 Vue.use({
   install(Vue) {
     console.log(Vue) // 此处Vue是Vue实例对象 通过install方法传入
