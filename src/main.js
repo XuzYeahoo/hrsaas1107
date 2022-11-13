@@ -15,7 +15,7 @@ import router from './router'
 import * as directives from '@/directives'
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import Components from '@/components'
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
@@ -25,6 +25,14 @@ Object.keys(directives).forEach(key => {
   // 属性名带引号，所以得用[]
   Vue.directive(key, directives[key]) // 注册自定义指令
 })
+
+Vue.use({
+  install(Vue) {
+    console.log(Vue) // 此处Vue是Vue实例对象 通过install方法传入
+  }
+})
+// 注册自定义组件
+Vue.use(Components)
 Vue.config.productionTip = false
 
 new Vue({
