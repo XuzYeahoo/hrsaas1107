@@ -11,3 +11,8 @@ export const getRoleList = (params) => {
 export const getCompanyInfo = (companyId) => {
   return request.get(`/company/${companyId}`)
 }
+
+// 删除角色
+export const deleteRole = (id) => {
+  return request.delete(`/sys/role/${id}`)
+}
