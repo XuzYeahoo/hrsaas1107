@@ -26,3 +26,8 @@ export const getRoleDetail = (id) => {
 export const updateRole = (data) => {
   return request.put(`/sys/role/${data.id}`, data)
 }
+
+// 新增角色
+export const addRole = (data) => {
+  return request.post('/sys/role', data)
+}

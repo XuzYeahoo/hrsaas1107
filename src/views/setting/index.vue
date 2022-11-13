@@ -10,6 +10,7 @@
                 type="primary"
                 size="small"
                 icon="el-icon-plus"
+                @click="showDialog = true"
               >新增角色</el-button>
             </el-row>
             <!-- 表格 -->
@@ -79,7 +80,8 @@
       </el-card>
     </div>
     <!-- 放置一个弹层组件 -->
-    <el-dialog title="编辑弹层" :visible="showDialog">
+    <!-- close事件 在点击的时候会触发 -->
+    <el-dialog title="编辑弹层" :visible="showDialog" @close="btnCancel">
       <el-form :model="roleForm" :rules="rules" label-width="120px">
         <el-form-item prop="name" label="角色名称">
           <el-input v-model="roleForm.name" />
@@ -90,7 +92,7 @@
         <!-- footer -->
         <el-row type="flex" justify="center">
           <el-col :span="6">
-            <el-button size="small">取消</el-button>
+            <el-button size="small" @click="btnCancel">取消</el-button>
             <el-button size="small" type="primary" @click="btnOK">确定</el-button>
           </el-col>
         </el-row>
@@ -100,7 +102,7 @@
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole, addRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -178,13 +180,24 @@ export default {
           await updateRole(this.roleForm) // 发请求更新数据
         } else {
           // 新增业务
+          await addRole(this.roleForm)
         }
         this.getRoleList() // 重新渲染页面
         this.$message.success('操作成功') // 提示用户
-        this.showDialog = false // 关闭弹层
+        this.showDialog = false // 关闭弹层 => 触发el-dialog的close事件
       } catch (error) {
         console.log(error)
       }
+    },
+    btnCancel() {
+      // 清空表单
+      this.roleForm = {
+        name: '',
+        description: ''
+      }
+      // 移除校验规则
+      this.$refs.roleForm.resetFields()
+      this.showDialog = false
     }
   }
 }
