@@ -21,7 +21,7 @@
               <el-table-column align="center" label="操作">
                 <template slot-scope="{row}">
                   <el-button size="small" type="success">分配权限</el-button>
-                  <el-button size="small" type="primary">编辑</el-button>
+                  <el-button size="small" type="primary" @click="editRole(row.id)">编辑</el-button>
                   <el-button size="small" type="danger" @click="deleteRole(row.id)">删除</el-button>
                 </template>
 
@@ -51,7 +51,7 @@
               :closable="false"
               :show-icon="true"
             />
-            <el-form label-width="120px" style="margin-top: 50px">
+            <el-form ref="roleForm" label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
                 <el-input v-model="formData.name" disabled style="width: 400px" />
               </el-form-item>
@@ -78,11 +78,29 @@
         </el-tabs>
       </el-card>
     </div>
+    <!-- 放置一个弹层组件 -->
+    <el-dialog title="编辑弹层" :visible="showDialog">
+      <el-form :model="roleForm" :rules="rules" label-width="120px">
+        <el-form-item prop="name" label="角色名称">
+          <el-input v-model="roleForm.name" />
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="roleForm.description" />
+        </el-form-item>
+        <!-- footer -->
+        <el-row type="flex" justify="center">
+          <el-col :span="6">
+            <el-button size="small">取消</el-button>
+            <el-button size="small" type="primary" @click="btnOK">确定</el-button>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList, getCompanyInfo, deleteRole } from '@/api/setting'
+import { getRoleList, getCompanyInfo, deleteRole, getRoleDetail, updateRole } from '@/api/setting'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -94,7 +112,18 @@ export default {
         pagesize: 2,
         total: 0 // 记录总数
       },
-      formData: {}
+      formData: {
+        // 公司信息
+      },
+      showDialog: false, // 控制弹层显示
+      // 专门接收新增或者编辑的编辑的表单数据
+      roleForm: {
+        name: '',
+        description: ''
+      },
+      rules: {
+        name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -129,6 +158,30 @@ export default {
         this.getRoleList()
         // 提示用户删除成功
         this.$message.success('删除角色成功')
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async editRole(id) {
+      // 先获取数据再回显 不会有延迟(一闪)
+      this.roleForm = await getRoleDetail(id) // 获取数据回显
+      this.showDialog = true // 显示弹层
+    },
+    async btnOK() {
+      try {
+        // 无论编辑还是新增 都需要先验证表单数据
+        await this.$refs.roleForm.validate() // 表单校验
+        // roleForm有id是编辑 没有是新增
+        if (this.roleForm.id) {
+          // 编辑
+          // 通过才会执行如下代码
+          await updateRole(this.roleForm) // 发请求更新数据
+        } else {
+          // 新增业务
+        }
+        this.getRoleList() // 重新渲染页面
+        this.$message.success('操作成功') // 提示用户
+        this.showDialog = false // 关闭弹层
       } catch (error) {
         console.log(error)
       }
