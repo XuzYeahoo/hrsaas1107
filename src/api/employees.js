@@ -16,3 +16,8 @@ export const getEmployeeList = (params) => {
 export const delEmployee = (id) => {
   return request.delete(`/sys/user/${id}`)
 }
+
+// 新增员工
+export const addEmployee = (data) => {
+  return request.post('/sys/user', data)
+}
