@@ -29,11 +29,11 @@ Object.keys(directives).forEach(key => {
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key]) // 注册过滤器
 })
-Vue.use({
-  install(Vue) {
-    console.log(Vue) // 此处Vue是Vue实例对象 通过install方法传入
-  }
-})
+// Vue.use({
+//   install(Vue) {
+//     console.log(Vue) // 此处Vue是Vue实例对象 通过install方法传入
+//   }
+// })
 // 注册自定义组件
 Vue.use(Components)
 Vue.config.productionTip = false

@@ -21,3 +21,8 @@ export const delEmployee = (id) => {
 export const addEmployee = (data) => {
   return request.post('/sys/user', data)
 }
+
+// 批量导入员工接口
+export const importEmployee = (data) => {
+  return request.post('/sys/user/batch', data)
+}

@@ -6,8 +6,8 @@
           <span>共{{ page.total }}条记录</span>
         </template>
         <template #after>
-          <el-button size="small" type="success">导入</el-button>
-          <el-button size="small" type="danger">导出</el-button>
+          <el-button size="small" type="success" @click="$router.push('/import')">导入</el-button>
+          <el-button size="small" type="danger" @click="exportData">导出</el-button>
           <el-button size="small" type="primary" @click="showDialog = true">新增员工</el-button>
         </template>
       </PageTools>
@@ -72,6 +72,7 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee.vue'
+import { formatDate } from '@/filters'
 export default {
   components: {
     AddEmployee
@@ -119,6 +120,57 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    exportData() {
+      const headers = {
+        '手机号': 'mobile',
+        '姓名': 'username',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+
+      // 导出excel
+      import('@/vendor/Export2Excel').then(async excel => {
+        // 获取所有的员工信息
+        // 因为没有一个接口可以获取全部员工信息 所以用getEmployeeList 将每页获取条数设置为总信息数
+        const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
+        const data = this.formatJson(headers, rows)
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '部门']]
+        const merges = ['A1:A2', 'B1:F1', 'G1:G2']
+        // excel是引入文件（Export2Excel）的导出对象
+        excel.export_json_to_excel({
+          header: Object.keys(headers),
+          data,
+          filename: '员工资料表',
+          multiHeader, // 复杂表头
+          merges
+        })
+      })
+    },
+    // 把 rows:[{}] => [[]]
+    formatJson(headers, rows) {
+      // 用headers里的中文列名找到rows里的英文列名 再用英文列名找到对应的属性值
+      return rows.map(item => {
+        // item是一个对象 {mobile:'xxx',username:'xxx'...}
+        return Object.keys(headers).map(key => {
+          // 需要判断字段
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            // 格式化日期
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            const obj = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
+            return obj ? obj.value : '未知'
+          }
+          // key 是中文列名
+          // headers[key] 得到英文列名
+          // 通过item[headers[key]]拿到对应的属性值
+          return item[headers[key]]
+        })
+      })
+      // return rows.map(item => Object.keys(headers).map(key => item[headers[key]]))
     }
   }
 }
