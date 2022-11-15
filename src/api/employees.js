@@ -26,3 +26,8 @@ export const addEmployee = (data) => {
 export const importEmployee = (data) => {
   return request.post('/sys/user/batch', data)
 }
+
+// 保存员工基本信息
+export const saveUserDetailById = (data) => {
+  return request.put(`/sys/user/${data.id}`, data)
+}
