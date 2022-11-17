@@ -51,3 +51,8 @@ export const getJobDetail = (id) => {
 export const updateJob = (data) => {
   return request.put(`/employees/${data.userId}/jobs`, data)
 }
+
+// 给员工分配角色
+export const assignRoles = (data) => {
+  return request.put('/sys/user/assignRoles', data)
+}

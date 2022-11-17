@@ -75,7 +75,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
               <el-button
                 type="text"
                 size="small"
@@ -107,6 +107,7 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <AssignRole ref="assignRole" :show-role-dialog.sync="showRoleDialog" :user-id="userId" />
   </div>
 </template>
 
@@ -114,11 +115,13 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees' // 引入员工的枚举对象
 import AddEmployee from './components/add-employee.vue'
+import AssignRole from './components/assign-role.vue'
 import { formatDate } from '@/filters'
 import QrCode from 'qrcode'
 export default {
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
   data() {
     return {
@@ -130,7 +133,9 @@ export default {
       },
       loading: false, // 显示遮罩层
       showDialog: false,
-      showCodeDialog: false
+      showCodeDialog: false,
+      showRoleDialog: false,
+      userId: null
     }
   },
   created() {
@@ -236,6 +241,13 @@ export default {
       } else {
         this.$message.warning('该用户还未设置头像')
       }
+    },
+    async editRole(id) {
+      this.userId = id // props赋值渲染是异步的
+      await this.$refs.assignRole.getUserDetailById(id) // 调用子组件的方法
+      // 强制等待数据获取完毕再显示弹层
+      // 显示弹层
+      this.showRoleDialog = true
     }
   }
 }
