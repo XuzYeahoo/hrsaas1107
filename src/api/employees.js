@@ -31,3 +31,23 @@ export const importEmployee = (data) => {
 export const saveUserDetailById = (data) => {
   return request.put(`/sys/user/${data.id}`, data)
 }
+
+// 读取用户详情的基础信息
+export const getPersonalDetail = (id) => {
+  return request.get(`/employees/${id}/personalInfo`)
+}
+
+// 更新用户详情的基础信息
+export const updatePersonal = (data) => {
+  return request.put(`/employees/${data.userId}/personalInfo`, data)
+}
+
+// 获取用户的岗位信息
+export const getJobDetail = (id) => {
+  return request.get(`/employees/${id}/jobs`)
+}
+
+// 保存岗位信息
+export const updateJob = (data) => {
+  return request.put(`/employees/${data.userId}/jobs`, data)
+}

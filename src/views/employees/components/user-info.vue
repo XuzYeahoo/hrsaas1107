@@ -37,7 +37,7 @@
       <el-row class="inline-info">
         <el-col :span="12">
           <el-form-item label="手机">
-            <el-input v-model="userInfo.mobile" />
+            <el-input v-model="userInfo.mobile" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -58,7 +58,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <ImageUpload ref="staffPhoto" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +90,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <ImageUpload ref="myStaffPhoto" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -284,7 +285,8 @@
 
 <script>
 import EmployeeEnum from '@/api/constant/employees'
-
+import { getUserDetailById } from '@/api/user'
+import { getPersonalDetail, saveUserDetailById, updatePersonal } from '@/api/employees'
 export default {
   data() {
     return {
@@ -354,6 +356,48 @@ export default {
         proofOfDepartureOfFormerCompany: '', // 前公司离职证明
         remarks: '' // 备注
       }
+    }
+  },
+  created() {
+    this.getUserDetailById()
+    this.getPersonalDetail()
+  },
+  methods: {
+    async getUserDetailById() {
+      this.userInfo = await getUserDetailById(this.userId)
+      if (this.userInfo.staffPhoto && this.userInfo.staffPhoto.trim()) {
+        // 如果有值就说明已经有一个上传成功的头像 要回显到上传组件
+        this.$refs.staffPhoto.fileList = [{ url: this.userInfo.staffPhoto, upload: true }]
+      }
+    },
+    async getPersonalDetail() {
+      this.formData = await getPersonalDetail(this.userId)
+      if (this.formData.staffPhoto && this.formData.staffPhoto.trim()) {
+        this.$refs.myStaffPhoto.fileList = [{ url: this.formData.staffPhoto, upload: true }]
+      }
+    },
+    async saveUser() {
+      // 获取头像中的地址
+      const fileList = this.$refs.staffPhoto.fileList // 数组
+      // 应该先判断图片有没有上传完成
+      if (fileList.some(item => item.load)) {
+        // 没有上传完成 结束保存
+        this.$message.warning('还有图片没有上传完成')
+        return
+      }
+      // 没有员工头像也是可以保存信息的 所以要加一个判断
+      await saveUserDetailById({ ...this.userInfo, staffPhoto: fileList.length ? fileList[0].url : ' ' })
+      this.$message.success('保存用户基本信息成功')
+    },
+    async savePersonal() {
+      const fileList = this.$refs.myStaffPhoto.fileList
+      if (fileList.some(item => item.load)) {
+        // 没有上传完成 结束保存
+        this.$message.warning('还有图片没有上传完成')
+        return
+      }
+      await updatePersonal({ ...this.formData, staffPhoto: fileList.length ? fileList[0].url : ' ' })
+      this.$message.success('保存用户基础信息成功')
     }
   }
 }
