@@ -31,3 +31,9 @@ export const updateRole = (data) => {
 export const addRole = (data) => {
   return request.post('/sys/role', data)
 }
+
+// 给角色分配权限
+export const assignPerm = (data) => {
+  return request.put('/sys/role/assignPrem', data)
+}
+
