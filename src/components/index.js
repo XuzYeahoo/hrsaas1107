@@ -2,6 +2,8 @@ import PageTools from '@/components/PageTools'
 import UploadExcel from './UploadExcel'
 import ImageUpload from './ImageUpload'
 import Print from 'vue-print-nb'
+import ScreenFull from './ScreenFull'
+import ThemePicker from './ThemePicker'
 // 负责所有全局自定义组件的注册
 export default {
   install(Vue) {
@@ -10,5 +12,7 @@ export default {
     Vue.component('UploadExcel', UploadExcel)
     Vue.component('ImageUpload', ImageUpload)
     Vue.use(Print)
+    Vue.component('ScreenFull', ScreenFull)
+    Vue.component('ThemePicker', ThemePicker)
   }
 }
