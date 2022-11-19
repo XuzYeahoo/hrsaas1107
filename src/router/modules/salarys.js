@@ -1,21 +1,56 @@
-// 导出工资的路由规则
+
 import Layout from '@/layout'
-export default {
-  // 路由规则
-  path: '/salarys', // 路由地址
-  name: 'salarys', // 给模块的一级路由加一个name属性
-  component: Layout, // employees是一级路由 因为要显示布局Layout
+
+const salaryRouter = {
+  path: '/salarys',
+  component: Layout,
+  name: 'salarys',
   children: [
     {
-      // 默认路由
-      // 如果写path:'/xxx',要想显示二级路由就必须在路径中写上 '/employees/xxx'
-      path: '', // 这里不写表示 => 当我们输入/employees 不仅能访问到一级路由Layout,还能直接显示二级路由的内容
+      path: '',
       component: () => import('@/views/salarys'),
-      // meta:路由元信息 其实就是一个存储数据的地方，可以放任何内容
+      name: 'salarys',
       meta: {
-        title: '工资', // 这里加title是因为左侧导航读取了这里的title值
+        title: '工资',
         icon: 'money'
+      }
+    },
+    {
+      path: 'setting',
+      component: () => import('@/views/salarys/setting'),
+      name: 'salarysSetting',
+      hidden: true,
+      meta: {
+        title: '设置'
+      }
+    },
+    {
+      path: 'details/:yearMonth/:id',
+      component: () => import('@/views/salarys/detail'),
+      name: 'salarysDetails',
+      hidden: true,
+      meta: {
+        title: '详情'
+      }
+    },
+    {
+      path: 'historicalArchiving',
+      component: () => import('@/views/salarys/historical'),
+      name: 'salarysHistorical',
+      hidden: true,
+      meta: {
+        title: '历史归档'
+      }
+    },
+    {
+      path: 'monthStatement',
+      component: () => import('@/views/salarys/month'),
+      name: 'salarysMonthStatement',
+      hidden: true,
+      meta: {
+        title: '月报表'
       }
     }
   ]
 }
+export default salaryRouter

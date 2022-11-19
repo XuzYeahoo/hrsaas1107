@@ -3,7 +3,7 @@ import Layout from '@/layout'
 export default {
   // 路由规则
   path: '/setting', // 路由地址
-  name: 'setting', // 给模块的一级路由加一个name属性
+  name: 'settings', // 给模块的一级路由加一个name属性
   component: Layout, // employees是一级路由 因为要显示布局Layout
   children: [
     {

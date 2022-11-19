@@ -22,7 +22,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <!-- 下拉选项 -->
-              <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+              <el-dropdown-item command="add" :disabled="!checkPermission('add-dept')">添加子部门</el-dropdown-item>
               <!-- 编辑部门和删除部门只会在子节点上显示 -->
               <!-- 默认值为false表示不是根节点 根节点为true的时候不显示 -->
               <el-dropdown-item v-if="!isRoot" command="edit">编辑部门</el-dropdown-item>

@@ -9,6 +9,7 @@ import attendancesRouter from './modules/attendances'
 import salarysRouter from './modules/salarys'
 import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
+import userRouter from './modules/user'
 Vue.use(Router)
 
 /* Layout */
@@ -73,9 +74,9 @@ export const constantRoutes = [
       component: () => import('@/views/import')
     }]
   },
-
+  userRouter
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+
 ]
 
 // 导出动态路由变量
@@ -95,15 +96,15 @@ const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   // 临时合并静态路由和动态路由
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter() // 创建新路由
+  router.matcher = newRouter.matcher // reset router 将当前路由表设置为新路由表
 }
 
 export default router

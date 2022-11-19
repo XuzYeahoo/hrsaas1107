@@ -1,6 +1,6 @@
 import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
-
+import { resetRouter } from '@/router'
 const state = {
   token: getToken(), // 设置token为共享状态 初始化vuex的时候 就先从缓存中读取
   userInfo: {} // 因为我们会在**`getters`**中引用userinfo的变量，如果设置为null，则会引起异常和报错
@@ -37,7 +37,7 @@ const actions = {
     // 将两个接口结果合并
     // const obj = { ...result, ...baseInfo }
     context.commit('getUserInfo', { ...result, ...baseInfo })
-    return result
+    return result // 此处返回result 为后续做权限功能提供用户拥有的权限标识
   },
   // 登出操作
   logout(context) {
@@ -45,6 +45,15 @@ const actions = {
     context.commit('removeToken')
     // 删除用户信息
     context.commit('removeUserInfo')
+    // 重置路由
+    resetRouter()
+    // 将vuex中的路由清空为只剩默认静态路由
+    // 问题：vuex如何在子模块调用另一个子模块中的action？
+    // 情况1：不加命名空间的情况下，所有的mutation和action都挂载在全局上 可以直接调用
+    // 情况2：加了命名空间的context指的不是全局的context
+    //       加了{root:true}表示调用根级的mutation和action
+    //       context.commit(另一个子模块/mutation名称,payload,{root:true})
+    context.commit('permission/setRoutes', [], { root: true })
   }
 }
 export default {

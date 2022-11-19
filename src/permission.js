@@ -25,10 +25,17 @@ router.beforeEach(async(to, from, next) => {
       // 如果当前vuex中有用户资料的id，说明已经有资料，不用再去获取；如果没有id才需要获取
       if (!store.getters.userId) {
         // 如果没有id，获取用户信息
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
         // 后续需要放行 获取用户信息为异步 必须强制等待获取用户信息的代码执行完毕才能放行 所以必须改成同步的
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus) // 筛选得到当前用户拥有权限访问的动态路由
+        // 将动态路由添加到路由表中 默认路由表中只有静态路由
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }])
+        // 添加完动态路由之后 跳转到对应页面
+        // 执行完addRoutes必须用next(to.path) 这是一个已知的缺陷
+        next(to.path)
+      } else {
+        next()
       }
-      next()
     }
   } else {
     // 2.如果没有token

@@ -1,21 +1,72 @@
-// 导出审批的路由规则
 import Layout from '@/layout'
+
 export default {
-  // 路由规则
-  path: '/approvals', // 路由地址
-  name: 'approvals', // 给模块的一级路由加一个name属性
-  component: Layout, // employees是一级路由 因为要显示布局Layout
+  path: '/approvals',
+  component: Layout,
+  name: 'approvals',
   children: [
     {
-      // 默认路由
-      // 如果写path:'/xxx',要想显示二级路由就必须在路径中写上 '/employees/xxx'
-      path: '', // 这里不写表示 => 当我们输入/employees 不仅能访问到一级路由Layout,还能直接显示二级路由的内容
+      path: '',
       component: () => import('@/views/approvals'),
-      // meta:路由元信息 其实就是一个存储数据的地方，可以放任何内容
+      name: 'approvals',
       meta: {
-        title: '审批', // 这里加title是因为左侧导航读取了这里的title值
+        title: '审批',
         icon: 'tree-table'
       }
+    },
+    {
+      path: 'salaryApproval/:id',
+      component: () => import('@/views/approvals/salary'),
+      name: 'salaryApproval',
+      hidden: true,
+      meta: {
+        title: '工资审核',
+        icon: 'approval', noCache: true }
+    },
+    {
+      path: 'enterApproval/:id',
+      component: () => import('@/views/approvals/enter'),
+      name: 'enterApproval',
+      hidden: true,
+      meta: {
+        title: '入职审核',
+        icon: 'approval', noCache: true }
+    },
+    {
+      path: 'leaveApproval/:id',
+      component: () => import('@/views/approvals/leave'),
+      name: 'leaveApproval',
+      hidden: true,
+      meta: {
+        title: '申请请假',
+        icon: 'approval', noCache: true }
+    },
+    {
+      path: 'quitApproval/:id',
+      component: () => import('@/views/approvals/quit'),
+      name: 'quitApproval',
+      hidden: true,
+      meta: {
+        title: '申请离职',
+        icon: 'approval', noCache: true }
+    },
+    {
+      path: 'overtimeApproval/:id',
+      component: () => import('@/views/approvals/overtime'),
+      name: 'overtimeApproval',
+      hidden: true,
+      meta: {
+        title: '加班申请',
+        icon: 'approval', noCache: true }
+    },
+    {
+      path: 'securitySetting',
+      component: () => import('@/views/approvals/security'),
+      name: 'securitySetting',
+      hidden: true,
+      meta: {
+        title: '设置',
+        icon: 'approval', noCache: true }
     }
   ]
 }
