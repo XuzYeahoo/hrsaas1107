@@ -13,6 +13,8 @@
     <!-- <breadcrumb class="breadcrumb-container" /> -->
 
     <div class="right-menu">
+      <!-- 多语言 -->
+      <lang class="right-menu-item" />
       <!-- 全屏 -->
       <ScreenFull class="right-menu-item" />
       <!-- 动态主题 -->

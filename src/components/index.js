@@ -4,6 +4,7 @@ import ImageUpload from './ImageUpload'
 import Print from 'vue-print-nb'
 import ScreenFull from './ScreenFull'
 import ThemePicker from './ThemePicker'
+import Lang from './lang'
 // 负责所有全局自定义组件的注册
 export default {
   install(Vue) {
@@ -14,5 +15,6 @@ export default {
     Vue.use(Print)
     Vue.component('ScreenFull', ScreenFull)
     Vue.component('ThemePicker', ThemePicker)
+    Vue.component('Lang', Lang)
   }
 }

@@ -11,6 +11,7 @@ export default {
       // 如果写path:'/xxx',要想显示二级路由就必须在路径中写上 '/employees/xxx'
       path: '', // 这里不写表示 => 当我们输入/employees 不仅能访问到一级路由Layout,还能直接显示二级路由的内容
       component: () => import('@/views/permission'),
+      name: 'permissions',
       // meta:路由元信息 其实就是一个存储数据的地方，可以放任何内容
       meta: {
         title: '权限管理', // 这里加title是因为左侧导航读取了这里的title值
