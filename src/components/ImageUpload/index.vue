@@ -26,8 +26,8 @@
 <script>
 import COS from 'cos-js-sdk-v5'
 const cos = new COS({
-  SecretId: 'AKID34Pp6CAxX2S5i5Tl4A1gKrIZtsT4cVZY',
-  SecretKey: 'xotoY6SoAQfu9NcsALj4HH7mJIBwwvyz'
+  SecretId: 'xxxx',
+  SecretKey: 'xxxx'
 })
 export default {
   data() {
